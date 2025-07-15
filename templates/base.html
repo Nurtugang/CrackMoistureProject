@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Detection</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Defect Detection</h1>
+        
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-buttons">
+                <button class="btn" onclick="openCamera()">
+                    📷 Take Photo
+                </button>
+                <button class="btn" onclick="document.getElementById('fileInput').click()">
+                    📁 Upload Image
+                </button>
+                <button class="btn btn-secondary" onclick="toggleDemoImages()">
+                    🖼️ Demo Images
+                </button>
+            </div>
+            
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)">
+            
+            <!-- Demo Images -->
+            <div id="demoImages" class="demo-images" style="display: none;"></div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing image...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Camera Modal -->
+        <div id="cameraModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; padding: 20px; max-width: 90%; max-height: 90%;">
+                <video id="cameraVideo" autoplay style="width: 100%; max-width: 400px; border-radius: 8px;"></video>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn" onclick="capturePhoto()">📸 Capture</button>
+                    <button class="btn btn-secondary" onclick="closeCamera()">❌ Cancel</button>
+                </div>
+                <canvas id="cameraCanvas" style="display: none;"></canvas>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="result-section" id="resultSection">
+            <h2 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">Detection Results</h2>
+            
+            <div class="image-container">
+                <img id="processedImage" class="processed-image" src="" alt="Processed Image">
+                <div id="bboxContainer"></div>
+            </div>
+            
+            <div class="detection-results">
+                <div class="detection-summary" id="detectionSummary"></div>
+                <ul class="detection-list" id="detectionList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
