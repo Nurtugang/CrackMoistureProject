@@ -127,10 +127,10 @@ function openCamera() {
     const modal = document.getElementById('cameraModal');
     const video = document.getElementById('cameraVideo');
     
+    // Запрашиваем заднюю камеру на мобильных
     navigator.mediaDevices.getUserMedia({ 
         video: { 
-            width: { ideal: 640 },
-            height: { ideal: 480 }
+            facingMode: 'environment' // Задняя камера
         } 
     })
     .then(stream => {
@@ -139,8 +139,19 @@ function openCamera() {
         modal.style.display = 'block';
     })
     .catch(error => {
-        showError('Camera access denied or not available');
         console.error('Camera error:', error);
+        
+        // Fallback - любая камера
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            currentStream = stream;
+            video.srcObject = stream;
+            modal.style.display = 'block';
+        })
+        .catch(fallbackError => {
+            showError('Camera access denied or not available');
+            console.error('Fallback camera error:', fallbackError);
+        });
     });
 }
 
@@ -162,19 +173,33 @@ function capturePhoto() {
     const canvas = document.getElementById('cameraCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Set canvas size to match video
+    // Убеждаемся что видео загружено
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        showError('Camera not ready, please try again');
+        return;
+    }
+    
+    // Устанавливаем размер canvas равным видео
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
-    // Draw video frame to canvas
-    ctx.drawImage(video, 0, 0);
+    // Рисуем кадр из видео на canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Convert to blob and process
+    // Конвертируем в blob с хорошим качеством
     canvas.toBlob(blob => {
-        const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-        closeCamera();
-        processImage(file);
-    }, 'image/jpeg', 0.9);
+        if (blob) {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const file = new File([blob], `camera-capture-${timestamp}.jpg`, { 
+                type: 'image/jpeg' 
+            });
+            
+            closeCamera();
+            processImage(file);
+        } else {
+            showError('Failed to capture photo');
+        }
+    }, 'image/jpeg', 0.92); // Высокое качество
 }
 
 // Demo images functions
