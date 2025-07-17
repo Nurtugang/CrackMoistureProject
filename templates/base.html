@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Defect Detection</title>
+    <title>Crack Classification</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Defect Detection</h1>
+        <h1>🔍 Building Crack Classification</h1>
+        <p class="subtitle">AI-powered crack severity assessment for building inspection</p>
         
         <!-- Upload Section -->
         <div class="upload-section">
@@ -34,7 +35,7 @@
         <!-- Loading -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Processing image...</p>
+            <p>Analyzing crack severity...</p>
         </div>
 
         <!-- Error Message -->
@@ -54,16 +55,30 @@
 
         <!-- Results Section -->
         <div class="result-section" id="resultSection">
-            <h2 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">Detection Results</h2>
+            <h2 style="margin-bottom: 20px; text-align: center; color: #2c3e50;">Classification Results</h2>
             
+            <!-- Image Display -->
             <div class="image-container">
-                <img id="processedImage" class="processed-image" src="" alt="Processed Image">
-                <div id="bboxContainer"></div>
+                <img id="processedImage" class="processed-image" src="" alt="Analyzed Image">
             </div>
             
-            <div class="detection-results">
-                <div class="detection-summary" id="detectionSummary"></div>
-                <ul class="detection-list" id="detectionList"></ul>
+            <!-- Classification Results -->
+            <div class="classification-results">
+                <div class="classification-card" id="classificationCard">
+                    <div class="severity-indicator" id="severityIndicator"></div>
+                    <div class="classification-details">
+                        <h3 id="categoryTitle"></h3>
+                        <p id="categoryDescription"></p>
+                        <div class="confidence-bar">
+                            <span>Confidence: </span>
+                            <div class="confidence-progress">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                            <span id="confidenceValue"></span>
+                        </div>
+                        <div class="action-required" id="actionRequired"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

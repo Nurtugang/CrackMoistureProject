@@ -1,0 +1,2 @@
+inference-sdk==0.22.0
+opencv-python
